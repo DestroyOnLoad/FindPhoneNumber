@@ -13,7 +13,7 @@ namespace FindPhoneNumber
         static Regex phoneNumRg = new Regex(@"\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})");
 
         //temp variables
-        static List<string> values = new List<string>();  //will store full strings read and be rewritten with phone number value;
+        static List<string> values = new List<string>();
 
         static void Main(string[] args)
         {
@@ -23,13 +23,18 @@ namespace FindPhoneNumber
                 string s;
                 while ((s = sr.ReadLine()) != null)
                 {
-                    Console.WriteLine(s);
+                    values.Add(s);
                 }
             }
 
             //replace each element in the list with the result of find phone number
+            for (int i = 0; i < values.Count; i++)
+            {
+                values[i] = FindPhoneNumber(values[i]);
+            }
 
             //export the list to a new csv file [or new row in original csv file];
+            
         }
 
         static string FindPhoneNumber(string s)
