@@ -1,3 +1,4 @@
 *.suo
 .json
 FindPhoneNumber/obj/
+FindPhoneNumber/bin/
