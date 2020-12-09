@@ -8,19 +8,25 @@ namespace FindPhoneNumber
     class Program
     {
         //EDIT THESE FILES PATHS FOR YOUR USAGE
-        static readonly string readablePath = @"C:\Desktop\someFile.csv";
-        static string writablePath = @"C:\Desktop\phoneList.csv";
+        static readonly string readablePath = @"C:\Users\User\Desktop\someFile.csv";
+        static string writablePath = @"C:\Users\User\Desktop\phoneNumberLookup.csv";
 
 
         static readonly Regex phoneNumRg = new Regex(@"\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})");
 
         //temp variable(s)
-        static List<string> values = new List<string>();
+        static List<record> values = new List<record>();
+
+        public class record
+        {
+            public string ProductId { get; set; }
+            public string Url { get; set; }
+            public string PhoneNumber { get; set; }
+        }
 
         static void Main(string[] args)
         {
             ReadValuesFromFile();
-            ReplaceValuesWithPhoneNumbers();
             WritePhoneNumbersToFile();
             Console.WriteLine("Complete");
         }
@@ -29,19 +35,11 @@ namespace FindPhoneNumber
         {
             using (StreamWriter sw = File.CreateText(writablePath))
             {
-                foreach (string v in values)
+                foreach (record v in values)
                 {
-                    sw.WriteLine(v);
-                    Console.WriteLine($"Writing {v}");
+                    sw.WriteLine($"{v.ProductId},{v.Url},{v.PhoneNumber}");
+                    Console.WriteLine($"Writing {v.ProductId}");
                 }
-            }
-        }
-
-        private static void ReplaceValuesWithPhoneNumbers()
-        {
-            for (int i = 0; i < values.Count; i++)
-            {
-                values[i] = FindPhoneNumber(values[i]);
             }
         }
 
@@ -52,7 +50,11 @@ namespace FindPhoneNumber
                 string s;
                 while ((s = sr.ReadLine()) != null)
                 {
-                    values.Add(s);
+                    values.Add(new record {
+                        ProductId = s.Split(',')[0],
+                        Url = s.Substring(s.IndexOf(',')),
+                        PhoneNumber = FindPhoneNumber(s)
+                    });
                 }
             }
         }
